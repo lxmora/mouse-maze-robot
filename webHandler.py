@@ -1,5 +1,5 @@
 import re, socket, ssl
-from constant import *
+from constants import *
 
 class WebHandler():
 
