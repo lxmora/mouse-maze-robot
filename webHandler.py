@@ -10,7 +10,7 @@ class WebHandler():
         ssl_context.verify_mode = ssl.CERT_NONE
         ssl_context.load_cert_chain(CERT_PATH,KEY_PATH)
         
-        self.server_socket = socket.creat_connection(("alchemi.dev"),1965)
+        self.server_socket = socket.create_connection(("alchemi.dev"),1965)
         self.server_socket = ssl_context.wrap_socket(self.server_socket, server_hostname = "alchemi.dev")
         
         self.maze_pattern = re.compile("`{3}A maze with a mouse in the middle(.*)`{3}", re.S)
