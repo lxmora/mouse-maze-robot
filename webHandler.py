@@ -10,7 +10,7 @@ class WebHandler():
         ssl_context.verify_mode = ssl.CERT_NONE
         ssl_context.load_cert_chain(CERT_PATH,KEY_PATH)
         
-        self.server_socket = socket.create_connection(("alchemi.dev"),1965)
+        self.server_socket = socket.create_connection(("alchemi.dev",1965))
         self.server_socket = ssl_context.wrap_socket(self.server_socket, server_hostname = "alchemi.dev")
         
         self.maze_pattern = re.compile("`{3}A maze with a mouse in the middle(.*)`{3}", re.S)
@@ -29,11 +29,11 @@ class WebHandler():
 
     def get_maze(self, page_string):
         
-        maze_string = self.maze_pattern(page_string).group(0)
-        maze_string = maze_string.replace("```A maze with a mouse in the middle").replace("```")
+        maze_string = self.maze_pattern.search(page_string).group(0)
+        maze_string = maze_string.replace("```A maze with a mouse in the middle","").replace("```","")
         maze_string = maze_string.strip()
         
-        maze_string = maze_string.translate(cleaner_dict)
+        maze_string = maze_string.translate(self.cleaner_dict)
         maze_string = maze_string.replace("S","  ").replace("\n","")
         
         return maze_string
