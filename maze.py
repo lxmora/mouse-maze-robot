@@ -33,7 +33,6 @@ class Maze():
         left_edges=self.check_edges(maze_string, left_edges)
 
         for edge in top_edges:
-            print("Top:",end="")
             vec = (edge[0],edge[1]+1)
             vec = self._to_global_vec(vec)
             node=self.maze_array[(vec)]
@@ -41,7 +40,6 @@ class Maze():
             node.visitState=1
 
         for edge in left_edges:
-            print("Left:",end="")
             vec = (edge[0]+1,edge[1])
             vec = self._to_global_vec(vec)
             node=self.maze_array[(vec)]
@@ -65,14 +63,11 @@ class Maze():
         current_y=self.current_position[1]
         vec_x=vec[0]
         vec_y=vec[1]
-        print("(",vec_x,",",vec_y,")","--> ",end="")
         offset_x=self.center_offset[0]
         offset_y=self.center_offset[1]
 
         global_x=current_x+((vec_x-offset_x)//2)
         global_y=current_y+((vec_y-offset_y)//2)
-        print("(",global_x,",",global_y,")")
-        print("\n")
         return (global_x,global_y)
     
 
@@ -86,12 +81,3 @@ def build_marked_maze(maze, edge_list):
             else:
                 print(maze[i+j*11],end='')
         print()
-
-    
-
-maze=Maze(1000, (-1,0))
-build_marked_maze(test_string,[])
-maze.process_maze_string(test_string)
-for x in range(-2,3):
-    print(maze.maze_array[x,0])
-    print(maze.maze_array[x,0].left)
