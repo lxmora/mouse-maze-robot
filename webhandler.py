@@ -4,7 +4,6 @@ from constants import *
 class WebHandler():
 
     def __init__(self):
-        
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
@@ -18,7 +17,6 @@ class WebHandler():
 
 
     def request_page(self):
-        
         self.server_socket.sendall(("gemini://alchemi.dev/maze/app\r\n").encode("UTF-8"))
        # socket keep response in an internal buffer, we access it like a file
         buffer_data = self.server_socket.makefile("r", encoding="UTF-8")
@@ -28,7 +26,6 @@ class WebHandler():
         return page_data
 
     def get_maze(self, page_string):
-        
         maze_string = self.maze_pattern.search(page_string).group(0)
         maze_string = maze_string.replace("```A maze with a mouse in the middle","").replace("```","")
         maze_string = maze_string.strip()
