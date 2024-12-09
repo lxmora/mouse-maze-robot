@@ -25,7 +25,16 @@ class WebHandler():
 
         return page_data
 
-    def get_maze(self, page_string):
+    def request_movement(self, direction : str):
+        self.server_socket.sendall(("gemini://alchemi.dev/maze/app?r\r\n").encode("UTF-8"))
+       # Directions can be 'l', 'd', 'u', 'r' for left, down, up, right
+        buffer_data = self.server_socket.makefile("r", encoding="UTF-8")
+        page_data = buffer_data.read()
+        buffer_data.close()
+
+        return page_data
+
+    def extract_maze(self, page_string):
         maze_string = self.maze_pattern.search(page_string).group(0)
         maze_string = maze_string.replace("```A maze with a mouse in the middle","").replace("```","")
         maze_string = maze_string.strip()
@@ -34,3 +43,6 @@ class WebHandler():
         maze_string = maze_string.replace("S","  ").replace("\n","")
         
         return maze_string
+
+    def get_maze(self):
+        return self.extract_maze(self.request_page())
