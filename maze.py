@@ -61,19 +61,15 @@ class Maze():
             print("Vec in:", vec, end=" ")
             vec = self.to_global_vec(vec)
             print("Top Edge Found :", edge, " --> Corresponding Vec:", vec)
-            node=self.get_node(vec)
-            if node.visit_state == 0:
-                node.top=True
-                node.visit_state=1
+            self.set_top(vec)
+            self.set_state(vec, 1)
 
         for edge in left_edges:
             vec = (edge[0]+1,edge[1])
             vec = self.to_global_vec(vec)
             print("Left Edge Found :", edge, " --> Corresponding Vec:", vec)
-            node=self.get_node(vec)
-            if node.visit_state == 0:
-                node.left=True
-                node.visit_state=1
+            self.set_left(vec)
+            self.set_state(vec, 1)
 
     def check_edges(self, maze_string : str, edge_list : list):
         present_edges=[]
@@ -88,6 +84,18 @@ class Maze():
         offest_vec = (vec[0]+51,vec[1]+51)
         print("converting", vec, "-->", offest_vec)
         return self.maze_array[offest_vec]
+
+    def set_state(self, node, state):
+        node=self.get_node(node)
+        node.visit_state=state
+
+    def set_left(self, node):
+        node=self.get_node(node)
+        node.left=True
+
+    def set_top(self, node):
+        node=self.get_node(node)
+        node.top=True
     
     def vec_to_index(self, vec : tuple):
         return (((vec[0]*self.symbol_size))+((vec[1]*self.symbol_size*self.view_size)))
@@ -125,8 +133,9 @@ while True:
     x_pos=m.current_position[0]
     y_pos=m.current_position[1]
     print(m.current_position,"Left:",m.get_node((x_pos,y_pos)).left,", Top:",m.get_node((x_pos,y_pos)).top,", Right:",m.get_node((x_pos+1,y_pos)).left,", Down:",m.get_node((x_pos,y_pos-1)).top)
-    print("(48, 51).Left =",m.maze_array[(48, 51)].left)
-
+    for x in range(-2,3):
+        for y in range(2,-3):
+            print("("+str(x)+":"+str(y)+")"+".Left =",m.get_node((x,y)).left)
     i = input()
     if i == 'l':
         m.move_left()
@@ -136,4 +145,5 @@ while True:
         m.move_up()
     if i == 'd':
         m.move_down()
+
     
