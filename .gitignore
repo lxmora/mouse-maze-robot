@@ -163,3 +163,5 @@ cython_debug/
 
 gemini_cert.key
 gemini_cert.pem
+.vscode/launch.json
+maze.dat
