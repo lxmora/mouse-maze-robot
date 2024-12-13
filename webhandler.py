@@ -1,4 +1,6 @@
-import re, socket, ssl, time
+import re
+import socket
+import ssl
 from constants import *
 
 class WebHandler():
@@ -13,6 +15,7 @@ class WebHandler():
         self.cleaner_dict = {96:32, 44:32, 128000:83, 128001:83}
 
     def send_request(self, request : str):
+        print("sending request:",request)
         server_socket = socket.create_connection(("alchemi.dev",1965))
         server_socket = self.ssl_context.wrap_socket(server_socket, server_hostname = "alchemi.dev")
         server_socket.sendall(request)
@@ -27,16 +30,18 @@ class WebHandler():
         return self.send_request(("gemini://alchemi.dev/maze/app\r\n").encode("UTF-8"))
 
     def request_movement(self, direction : str):
-        return self.extract_maze(self.send_request(("gemini://alchemi.dev/maze/app?"+direction+"\r\n").encode("UTF-8")))
+        page_string = self.send_request(("gemini://alchemi.dev/maze/app?"+direction+"\r\n").encode("UTF-8"))
+        return self.extract_maze(page_string)
 
     def extract_maze(self, page_string):
         maze_string = self.maze_pattern.search(page_string).group(0)
-        maze_string = maze_string.replace("```A maze with a mouse in the middle","").replace("```","")
+        maze_string = maze_string.replace("```A maze with a mouse in the middle","")
+        maze_string = maze_string.replace("```","")
         maze_string = maze_string.strip()
-        
+
         maze_string = maze_string.translate(self.cleaner_dict)
         maze_string = maze_string.replace("S","  ").replace("\n","")
-        
+
         return maze_string
 
     def get_maze(self):
