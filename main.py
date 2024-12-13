@@ -20,7 +20,7 @@ os.nice(19)
 try:
     open("maze.dat",'r')
 except:
-    m=Maze(, (0,0))
+    m=Maze(5000, (0,0))
 else:
     m=Maze.load()
 n=compass.Navigator(m)
