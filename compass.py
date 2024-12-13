@@ -11,6 +11,7 @@ class Navigator():
         maze.process_maze_string()
 
         adj_nodes = maze.get_adjacent_nodes()
+
         adj_edges = maze.check_adjacent()
         deadcounter = 0
         for edge in adj_edges:
@@ -24,7 +25,7 @@ class Navigator():
 
         print(", deadcounter:",deadcounter)
         print("facing:",self.facing)
-        
+
         if self.facing == "left":
             print("debug:",adj_nodes["down"].visit_state != 3,adj_nodes["down"].visit_state)
             if adj_edges["down"]:

@@ -25,7 +25,7 @@ else:
     m=Maze.load()
 n=compass.Navigator(m)
 
-mode=1
+mode=0
 
 timer=time.time()
 if __name__ == "__main__":
@@ -59,3 +59,7 @@ if __name__ == "__main__":
             m.move_up()
         if i == 'd':
             m.move_down()
+        if i == 's':
+            m.save()
+        if i == 'e':
+            mode = 2

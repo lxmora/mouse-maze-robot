@@ -12,7 +12,6 @@ class Node():
         self.top = False
         self.left = False
         self.visit_state = 0 # 0 = unseen, 1 = seen, 2 = visited 3 = deadend
-        self.wayback = ""
 
     def set_blocked(self):
         self.visit_state = 3
