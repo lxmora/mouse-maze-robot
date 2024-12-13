@@ -20,12 +20,12 @@ os.nice(19)
 try:
     open("maze.dat",'r')
 except:
-    m=Maze(100, (0,0))
+    m=Maze(, (0,0))
 else:
     m=Maze.load()
 n=compass.Navigator(m)
 
-mode=0
+mode=1
 
 timer=time.time()
 if __name__ == "__main__":
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             m.save()
             timer=time.time()
         cycle_end=time.time()
-        while cycle_end-cycle_start<3.0:
+        while cycle_end-cycle_start<0.5:
             cycle_end=time.time()
 
     while mode == 0:
