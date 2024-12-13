@@ -1,4 +1,6 @@
 import numpy as np
+import pickle
+import os
 
 import webhandler as wh
 from constants import *
@@ -10,11 +12,12 @@ class Node():
         self.top = False
         self.left = False
         self.visit_state = 0 # 0 = unseen, 1 = seen, 2 = visited
+        self.wayback = ""
 
 
 class Maze():
 
-    def __init__(self, max_depth : int, position : tuple, maze_array : np.ndarray = None):
+    def __init__(self, max_depth : int, position : tuple, maze_array : np.ndarray = None, fromload=False):
         self.server = wh.WebHandler()
         self.maze_buffer = []
         self.update_maze()
@@ -23,8 +26,25 @@ class Maze():
         self.view_size = 11
         self.center_offset = (5,5)
         self.symbol_size = 2
-        if maze_array == None:
-            self.maze_array = np.array([[Node() for _ in range(max_depth+1)] for _ in range(max_depth+1)])
+        if fromload == False:
+            if maze_array == None:
+                self.maze_array = np.array([[Node() for _ in range(max_depth+1)] for _ in range(max_depth+1)])
+            else:
+                self.maze_array = maze_array
+        else:
+            self.maze_array = maze_array
+
+    def save(self):
+        savedata=pickle.dumps([self.max_depth,self.current_position,self.maze_array])
+        file=open("maze.dat","wb")
+        file.write(savedata)
+        file.close()
+
+    def load():
+        file=open("maze.dat","rb")
+        savedata=pickle.load(file)
+        print(savedata)
+        return Maze(savedata[0],savedata[1],savedata[2],fromload=True)
 
     def update_maze(self):
         self.maze_buffer = self.server.get_maze()
@@ -99,9 +119,34 @@ class Maze():
         return present_edges
 
     def get_node(self, vec : tuple):
-        offest_vec = (vec[0]+51,vec[1]+51)
+        offset=self.max_depth//2+1
+        offest_vec = (vec[0]+offset,vec[1]+offset)
         print("converting", vec, "-->", offest_vec)
         return self.maze_array[offest_vec]
+
+    def get_current_node(self):
+        vec=self.current_position
+        get_node(vec)
+
+    def get_left_node(self):
+        vec=self.current_position
+        vec[1]+= -1
+        get_node(vec)
+    
+    def get_right_node(self):
+        vec=self.current_position
+        vec[1]+= +1
+        get_node(vec)
+
+    def get_top_node(self):
+        vec=self.current_position
+        vec[1]+= +1
+        get_node(vec)
+
+    def get_bottom_node(self):
+        vec=self.current_position
+        vec[1]+= -1
+        get_node(vec)
 
     def set_state(self, node, state):
         node=self.get_node(node)
@@ -138,12 +183,13 @@ def build_marked_maze(maze : Maze, edge_list : list):
                 print(maze[i+j*11],end='')
         print()
 
-m=Maze(100, (0,0))
+os.nice(19)
+#m=Maze.load()
+m=Maze(5000, (0,0))
 
 print(len(m.maze_array)/2)
 
 while True:
-    
     m.process_maze_string()
     build_marked_maze(m.maze_buffer,m.debug_edges)
     print()
@@ -163,4 +209,6 @@ while True:
         m.move_up()
     if i == 'd':
         m.move_down()
+    if i == 's':
+        m.save()
 '''
